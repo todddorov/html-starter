@@ -1,96 +1,545 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/_vercel/insights/script.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
-    <title>Vercel HTML Starter</title>
-    <meta
-      name="description"
-      content="High-performance HTML based website template."
-    />
-  </head>
-  <body>
-    <h1>Vercel HTML Starter</h1>
-    <p>
-      This template is a simple, but powerful single
-      <code>index.html</code> file deployed to
-      <a href="https://vercel.com">Vercel</a>. When your site is deployed, all
-      static assets (like HTML, JavaScript, CSS, images, and more) are deployed
-      globally to every
-      <a href="https://vercel.com/docs/concepts/edge-network/overview"
-        >Vercel Edge Network</a
-      >
-      region.
-    </p>
-    <h2>Simple, privacy-friendly analytics</h2>
-    <p>
-      Want to understand your visitor traffic? Vercel Analytics gives you
-      first-party, privacy-friendly traffic analytics for your HTML site. This
-      template is already configured using the following script:
-    </p>
-    <pre><code>&lt;script defer src="/_vercel/insights/script.js"&gt;&lt;/script&gt;</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/analytics">Vercel Analytics</a>.
-    </p>
-    <h2>Integrated with git</h2>
-    <p>
-      Deploying updates to your site is as simple as
-      <code>git push</code> thanks to Vercel's advanced
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-      Support for GitHub, GitLab, Bitbucket is zero-configuration, and with the
-      flexible Vercel CLI and API, you can integrate with any tool possible.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-    </p>
-    <h2>Fast <code>gzip</code> compression</h2>
-    <p>
-      To help ensure the smallest possible file sizes for your static assets,
-      the Vercel Edge Network compresses files by default using
-      <code>gzip</code>. You can also optionally use
-      <code>brotli</code> compressesion if you prefer.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/edge-network/compression"
-        >compression</a
-      >.
-    </p>
-    <h2>Advanced routing configuration</h2>
-    <p>
-      Vercel gives you a variety of ways to configure the routing of your
-      website. For example, adding redirects, rewrites, or headers to your page.
-      While you can use <code>vercel.json</code> to define these through JSON,
-      you can also express your routing configuration as code using
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-    <p>
-      Middleware runs before the
-      <a href="https://vercel.com/docs/concepts/edge-network/caching"
-        >Vercel Edge Network Cache</a
-      >, so you can configure routing exactly as your application needs. For
-      example, this template uses <code>middleware.js</code> defined in the root
-      of the repository to add additional security headers to the site:
-    </p>
-    <pre><code>referrer-policy: origin-when-cross-origin
-strict-transport-security: max-age=31536000; includeSubDomains; preload
-x-content-type-options: nosniff
-x-dns-prefetch-control: on
-x-frame-options: DENY</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Swap Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <!-- Link to Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --grid-size: 8;
+            --tile-size: min(11vw, 60px);
+            --board-bg: #1a1a2e;
+            --tile-bg: #16213e;
+            --text-color: #e94560;
+            --score-color: #0f3460;
+            --accent-color: #fca311;
+            --font-family: 'VT323', monospace;
+        }
+
+        body {
+            background-color: var(--board-bg);
+            color: white;
+            font-family: var(--font-family);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--accent-color);
+            text-shadow: 2px 2px var(--text-color);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            width: calc(var(--grid-size) * var(--tile-size));
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .stat-box {
+            background: var(--score-color);
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 4px 0 var(--text-color);
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(var(--grid-size), var(--tile-size));
+            grid-template-rows: repeat(var(--grid-size), var(--tile-size));
+            gap: 4px;
+            background-color: #0f3460;
+            padding: 10px;
+            border-radius: 15px;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 20px rgba(252, 163, 17, 0.5);
+            touch-action: none;
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        #new-game-btn, #how-to-play-btn {
+            background-color: var(--score-color);
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: var(--font-family);
+            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: 0 4px 0 var(--text-color);
+        }
+
+        #new-game-btn:hover, #how-to-play-btn:hover {
+            background-color: #16213e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 var(--text-color);
+        }
+
+
+        .tile {
+            width: var(--tile-size);
+            height: var(--tile-size);
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .tile img {
+            width: 85%;
+            height: 85%;
+            object-fit: contain;
+            pointer-events: none;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+            transition: filter 0.2s;
+        }
+        
+        .tile.selected {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--accent-color);
+            background-color: rgba(252, 163, 17, 0.3);
+        }
+        
+        .power-row-clear img, .power-col-clear img, .power-bomb img {
+            filter: brightness(1.2) drop-shadow(0 0 5px white);
+        }
+        
+        .power-up-indicator {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+        }
+        .power-up-indicator .material-icons-outlined {
+            position: absolute; color: white; font-size: calc(var(--tile-size) * 0.45);
+            text-shadow: 0 0 5px black, 0 0 8px rgba(0,0,0,0.8);
+            opacity: 0; animation: fadeInIndicator 0.5s forwards;
+        }
+        @keyframes fadeInIndicator { to { opacity: 1; } }
+        
+        .icon-left { left: -2%; top: 50%; transform: translateY(-50%); }
+        .icon-right { right: -2%; top: 50%; transform: translateY(-50%); }
+        .icon-up { top: -2%; left: 50%; transform: translateX(-50%); }
+        .icon-down { bottom: -2%; left: 50%; transform: translateX(-50%); }
+
+        .power-row-clear { animation: pulse-row 1s infinite; }
+        .power-col-clear { animation: pulse-col 1s infinite; }
+        .power-bomb { animation: pulse-bomb 1.2s infinite; }
+        .power-color-bomb { animation: pulse-color-bomb 1.5s infinite alternate; }
+
+        @keyframes pulse-row { 0%, 100% { box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0ff; } 50% { box-shadow: 0 0 10px #fff, 0 0 20px #0ff, 0 0 30px #0ff; } }
+        @keyframes pulse-col { 0%, 100% { box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #f0f; } 50% { box-shadow: 0 0 10px #fff, 0 0 20px #f0f, 0 0 30px #f0f; } }
+        @keyframes pulse-bomb { 0%, 100% { transform: scale(1); box-shadow: 0 0 10px #ff5733; } 50% { transform: scale(1.05); box-shadow: 0 0 25px #ff5733; } }
+        @keyframes pulse-color-bomb { from { transform: rotate(0deg) scale(1.1); } to { transform: rotate(360deg) scale(1.1); } }
+
+        .tile.matched { animation: pop 0.3s ease-out forwards; }
+        .tile.fall { animation: fall 0.5s ease-in forwards; }
+
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.2); opacity: 0.7; } 100% { transform: scale(0); opacity: 0; } }
+        @keyframes fall { from { transform: translateY(-200px); } to { transform: translateY(0); } }
+
+        .modal {
+            display: none; position: fixed; z-index: 100; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.7);
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: var(--board-bg); padding: 30px 40px; border-radius: 15px;
+            text-align: center; border: 3px solid var(--accent-color);
+            box-shadow: 0 0 25px rgba(252, 163, 17, 0.6);
+            animation: slide-in 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            position: relative;
+            max-width: 500px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+        }
+
+        .rules-content-wrapper {
+            overflow-y: auto;
+            padding-right: 20px; /* Space for scrollbar */
+            margin-right: -20px;
+            text-align: left;
+             /* Scrollbar styling for a consistent look */
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) var(--score-color);
+        }
+        .rules-content-wrapper::-webkit-scrollbar {
+            width: 8px;
+        }
+        .rules-content-wrapper::-webkit-scrollbar-track {
+            background: var(--score-color);
+            border-radius: 10px;
+        }
+        .rules-content-wrapper::-webkit-scrollbar-thumb {
+            background-color: var(--accent-color);
+            border-radius: 10px;
+            border: 2px solid var(--score-color);
+        }
+
+
+        .modal-content h2 { font-size: 2.5rem; color: var(--accent-color); margin-top: 0; margin-bottom: 20px; text-align: center; }
+        .modal-content h3 { margin-top: 20px; color: var(--accent-color); font-size: 1.5rem; margin-bottom: 5px;}
+        .modal-content ul { padding-left: 20px; font-size: 1.1rem; line-height: 1.4; margin-top: 0; text-align: left;}
+        .modal-content ul li { margin-bottom: 8px; }
+
+        #restart-button {
+            background-color: var(--accent-color); color: var(--board-bg); border: none;
+            padding: 15px 30px; font-size: 1.5rem; border-radius: 10px; cursor: pointer;
+            font-family: var(--font-family); transition: background-color 0.2s, transform 0.2s;
+            margin-top: 10px; box-shadow: 0 4px 0 #c87e07;
+        }
+        #restart-button:hover { background-color: #ffb74d; transform: translateY(-2px); box-shadow: 0 6px 0 #c87e07; }
+
+        .close-btn {
+            position: absolute; top: 10px; right: 20px; font-size: 2.5rem;
+            color: #aaa; cursor: pointer; transition: color 0.2s;
+            z-index: 10;
+        }
+        .close-btn:hover { color: white; }
+
+        @keyframes slide-in { from { transform: translateY(-100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @media (max-width: 800px) { h1 { font-size: 2.5rem; } .stats-container { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Crypto Swap</h1>
+        <div class="stats-container">
+            <div class="stat-box">Score: <span id="score">0</span></div>
+            <div class="stat-box">Moves: <span id="moves">30</span></div>
+        </div>
+        <div id="game-board"></div>
+        <div class="button-container">
+            <button id="new-game-btn">New Game</button>
+            <button id="how-to-play-btn">How to Play</button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Game Over</h2>
+            <p id="modal-text">Your final score is 0.</p>
+            <button id="restart-button">Play Again</button>
+        </div>
+    </div>
+    <div id="rules-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>How to Play</h2>
+            <div class="rules-content-wrapper">
+                <h3>Rules & Scoring</h3>
+                <ul>
+                    <li>Swap adjacent coins to match 3 or more in a row or column.</li>
+                    <li>Get the highest score possible in 30 moves.</li>
+                    <li><b>Row/Column Clearer:</b> Match 4 coins to create. Clears a full line.</li>
+                    <li><b>Bomb:</b> Create an 'L' or 'T' shape match (5 coins). Clears a 3x3 area.</li>
+                    <li><b>Color Bomb:</b> Match 5 or more coins in a line. Swap it with any coin to clear all coins of that type.</li>
+                    <li><b>Scoring Example:</b> A 3-coin match earns 30 points (10 per coin). Creating a power-up with a 4-coin match earns 140 points (40 for the match + a 100-point bonus). Triggering cascades earns even more!</li>
+                </ul>
+                <h3>Advanced Tips</h3>
+                <ul>
+                    <li>Create special power-ups for higher scores.</li>
+                    <li>Look for cascade opportunities.</li>
+                    <li>Plan your moves ahead.</li>
+                    <li>Prioritize clearing blockers on difficult boards.</li>
+                    <li>Save powerful combinations for when you really need them.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('game-board');
+            const scoreDisplay = document.getElementById('score');
+            const movesDisplay = document.getElementById('moves');
+            
+            // Modal elements
+            const gameOverModal = document.getElementById('game-over-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalText = document.getElementById('modal-text');
+            const restartButton = document.getElementById('restart-button');
+            const rulesModal = document.getElementById('rules-modal');
+            const howToPlayBtn = document.getElementById('how-to-play-btn');
+            const newGameBtn = document.getElementById('new-game-btn');
+            const closeBtn = rulesModal.querySelector('.close-btn');
+
+            const width = 8;
+            let tiles = [];
+            let score = 0;
+            let moves = 30;
+            let selectedTile = null;
+            let isProcessing = false;
+
+            const cryptoTypes = [
+                'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png',    // Bitcoin
+                'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',  // Ethereum
+                'https://s2.coinmarketcap.com/static/img/coins/128x128/1839.png', // Higher-res BNB
+                'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png',  // Solana
+                'https://s2.coinmarketcap.com/static/img/coins/64x64/52.png',    // XRP
+                'https://s2.coinmarketcap.com/static/img/coins/64x64/2.png'     // Litecoin
+            ];
+            const powerTypes = {
+                ROW: 'power-row-clear', COL: 'power-col-clear',
+                BOMB: 'power-bomb', COLOR_BOMB: 'power-color-bomb'
+            };
+
+            function createBoard() {
+                grid.innerHTML = ''; tiles = [];
+                for (let i = 0; i < width * width; i++) {
+                    const tile = document.createElement('div');
+                    tile.classList.add('tile');
+                    tile.setAttribute('data-id', i);
+                    let randomCrypto;
+                    do {
+                        randomCrypto = cryptoTypes[Math.floor(Math.random() * cryptoTypes.length)];
+                    } while (
+                        (i % width >= 2 && tiles[i - 1]?.crypto === randomCrypto && tiles[i - 2]?.crypto === randomCrypto) ||
+                        (i >= width * 2 && tiles[i - width]?.crypto === randomCrypto && tiles[i - 2 * width]?.crypto === randomCrypto)
+                    );
+                    grid.appendChild(tile);
+                    tiles.push({ element: tile, crypto: randomCrypto, power: null });
+                    updateTileDisplay(i);
+                }
+                addEventListeners(); updateDisplays();
+            }
+
+            function updateDisplays() { scoreDisplay.textContent = score; movesDisplay.textContent = moves; }
+
+            function addEventListeners() {
+                tiles.forEach(tile => tile.element.addEventListener('click', handleTileClick));
+                restartButton.addEventListener('click', restartGame);
+                howToPlayBtn.addEventListener('click', () => rulesModal.style.display = 'flex');
+                newGameBtn.addEventListener('click', restartGame);
+                closeBtn.addEventListener('click', () => rulesModal.style.display = 'none');
+                window.addEventListener('click', (event) => { if (event.target == rulesModal) rulesModal.style.display = 'none'; });
+            }
+
+            function handleTileClick() {
+                if (isProcessing) return;
+                const id = parseInt(this.getAttribute('data-id'));
+                handleSelection(id);
+            }
+
+            async function handleSelection(id) {
+                if (tiles[id].power && !tiles[id].power.includes('color') && selectedTile === null) {
+                    isProcessing = true; activatePowerUp(id); decrementMove();
+                    await new Promise(r => setTimeout(r, 300));
+                    await processBoard();
+                    isProcessing = false; return;
+                }
+                if (selectedTile === null) {
+                    selectedTile = id; tiles[id].element.classList.add('selected');
+                } else {
+                    tiles[selectedTile].element.classList.remove('selected');
+                    const isAdjacent = Math.abs(selectedTile - id) === 1 || Math.abs(selectedTile - id) === width;
+                    const sameRow = Math.floor(selectedTile / width) === Math.floor(id / width);
+                    const sameCol = selectedTile % width === id % width;
+                    if (selectedTile === id) { selectedTile = null; return; }
+                    if ((sameRow && isAdjacent) || (sameCol && isAdjacent)) {
+                        await handleSwap(selectedTile, id);
+                    } else { selectedTile = id; tiles[id].element.classList.add('selected'); }
+                }
+            }
+
+            async function handleSwap(id1, id2) {
+                isProcessing = true; selectedTile = null;
+                swapTiles(id1, id2);
+                const isColorBombSwap = tiles[id1].power === powerTypes.COLOR_BOMB || tiles[id2].power === powerTypes.COLOR_BOMB;
+                let isValidSwap = isColorBombSwap || findMatches().size > 0;
+                if (isValidSwap) {
+                    decrementMove(); await processBoard(isColorBombSwap ? { id1, id2 } : null);
+                } else {
+                    await new Promise(r => setTimeout(r, 300));
+                    swapTiles(id1, id2);
+                }
+                isProcessing = false;
+            }
+
+            function swapTiles(id1, id2) {
+                [tiles[id1].crypto, tiles[id2].crypto] = [tiles[id2].crypto, tiles[id1].crypto];
+                [tiles[id1].power, tiles[id2].power] = [tiles[id2].power, tiles[id1].power];
+                updateTileDisplay(id1); updateTileDisplay(id2);
+            }
+
+            function updateTileDisplay(id) {
+                const tile = tiles[id];
+                tile.element.innerHTML = tile.crypto ? `<img src="${tile.crypto}" alt="Crypto Coin">` : '';
+                tile.element.className = 'tile';
+                if (tile.power) {
+                    tile.element.classList.add(tile.power);
+                    const indicatorContainer = document.createElement('div');
+                    indicatorContainer.className = 'power-up-indicator';
+                    let icons = [];
+                    switch (tile.power) {
+                        case powerTypes.ROW: icons.push({ name: 'arrow_back', class: 'icon-left' }, { name: 'arrow_forward', class: 'icon-right' }); break;
+                        case powerTypes.COL: icons.push({ name: 'arrow_upward', class: 'icon-up' }, { name: 'arrow_downward', class: 'icon-down' }); break;
+                        case powerTypes.BOMB: icons.push({ name: 'arrow_back', class: 'icon-left' }, { name: 'arrow_forward', class: 'icon-right' }, { name: 'arrow_upward', class: 'icon-up' }, { name: 'arrow_downward', class: 'icon-down' }); break;
+                    }
+                    icons.forEach(icon => {
+                        const span = document.createElement('span');
+                        span.className = 'material-icons-outlined ' + icon.class;
+                        span.textContent = icon.name;
+                        indicatorContainer.appendChild(span);
+                    });
+                    tile.element.appendChild(indicatorContainer);
+                }
+            }
+
+            async function processBoard(colorBombInfo = null) {
+                if (colorBombInfo) {
+                    await processColorBomb(colorBombInfo.id1, colorBombInfo.id2);
+                    await new Promise(r => setTimeout(r, 200)); await dropTiles(); await fillBoard();
+                }
+                let hasMatches = true;
+                while (hasMatches) {
+                    let matches = findMatches();
+                    if (matches.size === 0) { hasMatches = false; break; }
+                    score += matches.size * 10;
+                    const powerUpsToCreate = checkForPowerUpCreation(matches);
+                    await clearMatches(matches); await createPowerUps(powerUpsToCreate);
+                    await new Promise(r => setTimeout(r, 200)); await dropTiles(); await fillBoard();
+                }
+                updateDisplays(); checkGameOver();
+            }
+
+            function findMatches() {
+                const matches = new Set();
+                for (let r = 0; r < width; r++) for (let c = 0; c < width - 2; c++) {
+                    let i = r * width + c;
+                    if (tiles[i].crypto && tiles[i + 1].crypto === tiles[i].crypto && tiles[i + 2].crypto === tiles[i].crypto) { matches.add(i); matches.add(i + 1); matches.add(i + 2); }
+                }
+                for (let c = 0; c < width; c++) for (let r = 0; r < width - 2; r++) {
+                    let i = r * width + c;
+                    if (tiles[i].crypto && tiles[i + width].crypto === tiles[i].crypto && tiles[i + 2 * width].crypto === tiles[i].crypto) { matches.add(i); matches.add(i + width); matches.add(i + 2 * width); }
+                }
+                for (const id of [...matches]) { if (tiles[id].power) getAffectedByPowerUp(id).forEach(affId => matches.add(affId)); }
+                return matches;
+            }
+
+            async function processColorBomb(id1, id2) {
+                const cb = tiles[id1].power === powerTypes.COLOR_BOMB ? { tile: tiles[id1], id: id1 } : { tile: tiles[id2], id: id2 };
+                const other = cb.tile === tiles[id1] ? tiles[id2] : tiles[id1];
+                const matches = new Set([cb.id]);
+                if (other.power) {
+                    score += 500;
+                    const cryptoToChange = other.crypto;
+                    for(const t of tiles) if (t.crypto === cryptoToChange) { t.power = other.power; updateTileDisplay(tiles.indexOf(t)); }
+                    await new Promise(r => setTimeout(r, 100)); await clearMatches(findMatches());
+                } else {
+                    tiles.forEach((t, i) => { if (t.crypto === other.crypto) matches.add(i); });
+                    await clearMatches(matches);
+                }
+            }
+
+            function checkForPowerUpCreation(matches) {
+                const powerUps = [], checked = new Set(), matchArr = [...matches];
+                for (const id of matches) {
+                    const row = Math.floor(id / width), col = id % width;
+                    const rowM = matchArr.filter(mId => Math.floor(mId / width) === row);
+                    if (!checked.has(`r${row}`) && rowM.length >= 4) {
+                        powerUps.push({ id, type: rowM.length >= 5 ? powerTypes.COLOR_BOMB : powerTypes.ROW, crypto: tiles[id].crypto });
+                        checked.add(`r${row}`);
+                    }
+                    const colM = matchArr.filter(mId => mId % width === col);
+                    if (!checked.has(`c${col}`) && colM.length >= 4) {
+                        powerUps.push({ id, type: colM.length >= 5 ? powerTypes.COLOR_BOMB : powerTypes.COL, crypto: tiles[id].crypto });
+                        checked.add(`c${col}`);
+                    }
+                    if (rowM.length >= 3 && colM.length >= 3) powerUps.push({ id, type: powerTypes.BOMB, crypto: tiles[id].crypto });
+                }
+                if (powerUps.find(p => p.type === powerTypes.COLOR_BOMB)) return powerUps.filter(p => p.type === powerTypes.COLOR_BOMB).slice(0, 1);
+                if (powerUps.find(p => p.type === powerTypes.BOMB)) return powerUps.filter(p => p.type === powerTypes.BOMB).slice(0, 1);
+                return powerUps.slice(0, 1);
+            }
+            
+            async function createPowerUps(powerUpData) { powerUpData.forEach(p => { score += 100; tiles[p.id].crypto = p.crypto; tiles[p.id].power = p.type; updateTileDisplay(p.id); }); }
+            async function clearMatches(matches) { for (const id of matches) if (tiles[id]) { tiles[id].element.classList.add('matched'); tiles[id].crypto = null; tiles[id].power = null; } await new Promise(r => setTimeout(r, 300)); }
+
+            function activatePowerUp(id) { const affected = getAffectedByPowerUp(id, true); score += affected.size * 5; clearMatches(affected); }
+            
+            function getAffectedByPowerUp(id, self = false) {
+                 const affected = self ? new Set([id]) : new Set();
+                 if (!tiles[id] || !tiles[id].power) return affected;
+                 const row = Math.floor(id / width), col = id % width;
+                 switch(tiles[id].power) {
+                     case powerTypes.ROW: for(let i=0; i<width; i++) affected.add(row * width + i); break;
+                     case powerTypes.COL: for(let i=0; i<width; i++) affected.add(i * width + col); break;
+                     case powerTypes.BOMB: for(let r=row-1; r<=row+1; r++) for (let c=col-1; c<=col+1; c++) if (r >= 0 && r < width && c >= 0 && c < width) affected.add(r * width + c); break;
+                 }
+                 return affected;
+            }
+
+            async function dropTiles() {
+                for (let c = 0; c < width; c++) for (let r = width - 1, empty = width - 1; r >= 0; r--) {
+                    if (tiles[r * width + c].crypto) { if(r*width+c !== empty*width+c) swapTiles(r * width + c, empty * width + c); empty--; }
+                }
+                await new Promise(r => setTimeout(r, 300));
+            }
+
+            async function fillBoard() {
+                for (let i = 0; i < width * width; i++) if (tiles[i].crypto === null) {
+                    tiles[i].crypto = cryptoTypes[Math.floor(Math.random() * cryptoTypes.length)];
+                    updateTileDisplay(i); tiles[i].element.classList.add('fall');
+                }
+                await new Promise(r => setTimeout(r, 500));
+                tiles.forEach(t => t.element.classList.remove('fall'));
+            }
+
+            function decrementMove() { moves--; updateDisplays(); }
+
+            function checkGameOver() {
+                if (moves <= 0) {
+                    modalTitle.textContent = 'Game Over';
+                    modalText.textContent = `You're out of moves! Your final score is ${score}.`;
+                    gameOverModal.style.display = 'flex';
+                }
+            }
+
+            function restartGame() {
+                score = 0; moves = 30; selectedTile = null; isProcessing = false;
+                gameOverModal.style.display = 'none'; createBoard();
+            }
+
+            createBoard();
+        });
+    </script>
+</body>
 </html>
